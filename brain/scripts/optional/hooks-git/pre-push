@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# pre-push — stop hand-pushes of the main branch.
+#
+# The sync daemon pushes main within ~30s of any change. A hand push races it, loses with
+# non-fast-forward, and the half-finished manual merge that follows jams sync for hours.
+#
+# The daemon sets BRAIN_SYNC=1 to identify itself.
+set -euo pipefail
+
+[[ "${BRAIN_SYNC:-}" == "1" ]] && exit 0
+
+protected="main master"
+while read -r _local_ref local_sha remote_ref _remote_sha; do
+  [[ -z "${remote_ref:-}" ]] && continue
+  branch="${remote_ref#refs/heads/}"
+  for p in $protected; do
+    if [[ "$branch" == "$p" ]]; then
+      cat >&2 <<'MSG'
+
+  Refusing to push this branch by hand.
+
+  The sync daemon owns it and will push your commits within ~30 seconds.
+  Pushing manually races the daemon and jams sync.
+
+  Working on a branch?   ./scripts/optional/land-branch.sh <branch>
+  Genuinely need this?   BRAIN_SYNC=1 git push   (you are on your own)
+
+MSG
+      exit 1
+    fi
+  done
+done
+
+exit 0

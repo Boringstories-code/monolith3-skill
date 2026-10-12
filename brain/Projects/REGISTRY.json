@@ -1,0 +1,22 @@
+{
+  "_doc": "The routing table. When something arrives, the agent looks here to decide which project folder it belongs to. Aliases and signals are what make that automatic — list every way you'd refer to a project out loud.",
+  "schema_version": "1.0",
+  "generated": "2026-01-01",
+  "status_values": ["active", "paused", "won", "lost", "archived"],
+  "projects": [
+    {
+      "_comment": "Delete this example entry once you add a real one.",
+      "slug": "example-project",
+      "display_name": "Example Project",
+      "status": "active",
+      "kind": "client",
+      "started": "2026-01-01",
+      "aliases": ["the example", "example co"],
+      "signals": ["example.com", "widgets", "their rebrand"],
+      "repo_paths": [],
+      "folder": "Projects/example-project",
+      "contact": "00-OS/wiki/people/jane-doe",
+      "notes": "One line on what this actually is, for a future self who has forgotten."
+    }
+  ]
+}
